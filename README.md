@@ -1,4 +1,4 @@
-# On-Prem AD Setup, and Intune
+# On-Prem AD Setup
 ## Description
 This project outlines the essential setup steps for managing an on-premises Active Directory before exploring Microsoft Intune features. It serves as a step-by-step guide on how to install and configure the Azure AD Connect tool to sync on-premises Active Directory users with Azure Active Directory. I will be configuring Azure AD Connect with a .com domain UPN suffix, using a non-routable .com domain for directory synchronization. The non-routable domain used was created in a previous project, making this a continuation from that project.
 
