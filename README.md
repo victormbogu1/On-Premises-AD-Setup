@@ -8,7 +8,7 @@ While these tasks are typically handled by systems administrators at the hiring 
 ## Languages and Utilities Used
   + Active Directory
   + Azure AD Connect
-  + Azure portal
+  + Powershell
   + CMD
 ## Environments Used
   + VirtualBox
@@ -21,17 +21,17 @@ While these tasks are typically handled by systems administrators at the hiring 
   + [Windows Sever 2019](https://www.microsoft.com/en-us/evalcenter/evaluate-windows-server-2019)
 ## Program walk-through
 
-As previously mentioned, I will be using the Active Directory domain called DC, which contains 1000 users and will be synced to the Azure cloud. This AD has already been installed and the server promoted, as shown below. The domain name associated with the on-premises AD is mydomain.com, which will be used for identifying users during synchronization with Azure. Note that this is not a verified domain; it is only being used for testing purposes. In a real company, a verified domain would be used, typically a specific domain designated for company activities.
+As mentioned earlier, I will be using the Active Directory domain named DC, which contains 1000 users and will be synced to the Azure cloud. This AD has already been installed, and the server has been promoted, as shown below. The domain name associated with the on-premises AD is mydomain.com, which will be used to identify users during synchronization with Azure. Please note that this is not a verified domain; it is only being used for testing purposes. In a real company, a verified domain, typically one designated for company activities, would be used
 
 [![Screenshot-2024-07-06-155528.png](https://i.postimg.cc/GtTH3kPR/Screenshot-2024-07-06-155528.png)](https://postimg.cc/T5GRC5HN)
 
-I'll be using a created user which will an administrator who is assume to be in charge of this task as showned below
+I will be using a previously created user admin that I set up earlier
 
 [![Screenshot-2024-07-06-145924.png](https://i.postimg.cc/GhynKMhr/Screenshot-2024-07-06-145924.png)](https://postimg.cc/dLwftjyS)
 
-Next I'm going to go ahead and download AD Connect but first I need to install another seperate domain server that is designed for syncing process because you don't want to use active directory (DC) for syncing because it is always a busy server. so I go ahead and install a new server and call it Adsync. this process won't be showned here because is the same process of installation for the DC although the Active direcory wasn't configure on this server because it is mainly syncing process. 
+Next, I will download AD Connect, but first, I need to install a separate domain server designed specifically for the syncing process. This is because you don't want to use the Active Directory (DC) server for syncing, as it is always a busy server. I will install a new server and name it Adsync. This installation process won't be shown here because it is the same as the DC installation, although Active Directory wasn't configured on this server since it is intended mainly for syncing.
 
-After the installation i have to give it an ineternet access and this will be using the Adapter 2 internal network access from the DC domain server which was previously configured in the Active directory project which i did when creating the bulk users because I want to connect this adsync to this specific domain controller this adsync server will be using an internal ip address 172.16.0.101 automatically given by the DHCP server which it's been lease by the dhcp server i previously configured.
+After the installation, I need to give it internet access using Adapter 2, which provides internal network access from the DC domain server. This was previously configured in the Active Directory project when I created the bulk users. The Adsync server will connect to this specific domain controller and will be assigned an internal IP address of 172.16.0.101, automatically provided by the DHCP server I previously configured
 
 
 [![Screenshot-2024-07-11-175128.png](https://i.postimg.cc/NGHGgkmL/Screenshot-2024-07-11-175128.png)](https://postimg.cc/3W3Q1pLH)
@@ -39,47 +39,52 @@ After the installation i have to give it an ineternet access and this will be us
 
 [![Screenshot-2024-07-10-125411.png](https://i.postimg.cc/Hsqz0zjq/Screenshot-2024-07-10-125411.png)](https://postimg.cc/LnVj2ztD)
 
-seen as it is joined to the domain network
+as shown below, it joined the domain network.
 
 [![Screenshot-2024-07-10-125530.png](https://i.postimg.cc/JzC3Hh2m/Screenshot-2024-07-10-125530.png)](https://postimg.cc/SJVYwm4t)
 
-Next was to join the Adsyn server to the DC domain controller which i did and you find it in the DC domain active directory under the computer section
+Next, I joined the Adsync server to the DC domain controller. You can find it listed in the DC domain Active Directory under the "Computers" section
+
 
 [![Screenshot-2024-07-10-133551.png](https://i.postimg.cc/RFxqX3wV/Screenshot-2024-07-10-133551.png)](https://postimg.cc/67z9QpHD)
 
-i also verify it on the Dhcp server to see if is been listed among the address leases and it shows
+I also verified it on the DHCP server to ensure it is listed among the address leases, and it shows up correctly
 
 [![Screenshot-2024-07-10-133707.png](https://i.postimg.cc/NfFG88Zk/Screenshot-2024-07-10-133707.png)](https://postimg.cc/SJ0pk9Sn)
 
-After joining the Adsyn server to DC domain controller i need to put of the internet exploer ehanced security configuration off to enable me login to assure portal so i can download the AD Connect for the sychronisation
+After joining the Adsync server to the DC domain controller, I need to turn off the Internet Explorer Enhanced Security Configuration. This will allow me to log in to the Azure portal and download AD Connect for synchronization
 
 [![Screenshot-2024-07-10-133857.png](https://i.postimg.cc/HL9C1jfL/Screenshot-2024-07-10-133857.png)](https://postimg.cc/7ChRgPPv)
 
-I had chalenges downloading it due to the size of my CPU ram which slow down the process so i set the VM to be bidirectional which made it easier for me to download it directly on my host machine amd move it back the VM after downloading.
+I encountered challenges downloading it due to the limited size of my CPU RAM, which slowed down the process. To resolve this, I set the VM to bidirectional, allowing me to download it directly on my host machine and then move it back to the VM after downloading
 
 [![Screenshot-2024-07-10-140216.png](https://i.postimg.cc/k4gLrsQj/Screenshot-2024-07-10-140216.png)](https://postimg.cc/Y4TdY1yg)
 
-Next i login into my Aure portal so i can download the AD connect, beware of the difference between the AD connect as seen below i will be downloading the Download Connect Sync Agent because i want to sync from on premesis to azure cloud. Note you must have azure active directory premium p2 trial to enable you download the AD Connect
+Next, I logged into my Azure portal to download AD Connect. Be aware of the difference between the AD Connect options; as shown below, I will be downloading the "Download Connect Sync Agent" because I want to sync from on-premises to the Azure cloud. Note that you must have an Azure Active Directory Premium P2 trial to enable the download of AD Connect
 
 [![Screenshot-2024-07-10-135624.png](https://i.postimg.cc/G3NVNkHQ/Screenshot-2024-07-10-135624.png)](https://postimg.cc/14GvVV0n)
 
 
-During installation of AD connect I agree to the license terms and click on continue
+During the installation of AD Connect, I agreed to the license terms and clicked on Continue
 
 [![Screenshot-2024-07-10-140436.png](https://i.postimg.cc/BnyCZgfY/Screenshot-2024-07-10-140436.png)](https://postimg.cc/68rZYC3n)
 
-Next when you synchronize your on premises active directory with azure active directory you have to have a verified domain in azure active directory only the upns that are associated with the anti-masses active directory domain are synchronized however any upn that contains a non-routable domain such as dot com or local will be synchronized to on domain in our case I can see warning mydomain.com is not routable domain it is recommended to use custom settings to configure user sign-in options. i want to remind you that i don't have verified domain in my azure active directory and we are using mydomain.com domain which is non-routable domain for microsoft azure active directory so now i'm going to click on customize for custom installation it will gives us all the options which we can decide for ourselves
+Next, when synchronizing your on-premises Active Directory with Azure Active Directory, you must have a verified domain in Azure Active Directory. Only UPNs associated with the Azure Active Directory domain are synchronized. However, any UPN containing a non-routable domain such as ".com" or ".local" will be synchronized to an onmicrosoft.com domain
+
+In our case, I see a warning that mydomain.com is not a routable domain. It is recommended to use custom settings to configure user sign-in options. I want to remind you that I do not have a verified domain in my Azure Active Directory, and we are using the non-routable domain mydomain.com for Microsoft Azure Active Directory
+
+Now, I'm going to click on "Customize" for a custom installation. This will give me all the options to choose from
 
 [![Screenshot-2024-07-10-140656.png](https://i.postimg.cc/rwdSHrRS/Screenshot-2024-07-10-140656.png)](https://postimg.cc/PCjppN4x)
 
-On the "Install Required Components" screen, you can customize settings for Azure Active Directory Connect.
+On the "Install Required Components" screen, you can customize settings for Azure Active Directory Connect
 
-Selecting the first option allows you to specify a custom installation location. By default, Azure AD Connect uses SQL Express Edition for storage. For larger environments or high availability needs, choose the second option, "Use an existing SQL Server," which requires SQL to be installed on one of your servers. In this demo, we won't select any additional options. After making your selections, click "Install" to proceed.
+Selecting the first option allows you to specify a custom installation location. By default, Azure AD Connect uses SQL Express Edition for storage. For larger environments or high availability needs, choose the second option, "Use an existing SQL Server," which requires SQL to be installed on one of your servers. In this demo, we won't select any additional options. After making your selections, click "Install" to proceed
 
 [![Screenshot-2024-07-10-140928.png](https://i.postimg.cc/BvH2Sfgb/Screenshot-2024-07-10-140928.png)](https://postimg.cc/FfFYpqwX)
 
 
-Next, we will choose the sign-in options. There are various options available, and you need to select the one that best suits your organization. Most organizations choose Password Hash Synchronization. You can also enable Single Sign-On. For this demo, we will use Password Hash Synchronization.
+Next, I'll choose the sign-in options. There are various options available, and you need to select the one that best suits your organization. Most organizations choose Password Hash Synchronization. You can also enable Single Sign-On. For this demo, we will use Password Hash Synchronization
 
 [![Screenshot-2024-07-10-141430.png](https://i.postimg.cc/RF0CPcNm/Screenshot-2024-07-10-141430.png)](https://postimg.cc/Mch8Hf73)
 
@@ -87,13 +92,13 @@ Next On the "Connect to Azure AD" screen, enter your Azure Active Directory acco
 
 [![Screenshot-2024-07-10-143726.png](https://i.postimg.cc/XqSjntsj/Screenshot-2024-07-10-143726.png)](https://postimg.cc/r0jXJZ63)
 
-On the "Connect Your Directory" screen, you will need to add a local Active Directory. Under the forest selector, choose your directory and then click "Add." In our case, select mydomain.com and click "Add Directory" to include the local Active Directory.
+On the "Connect Your Directory" screen, you will need to add a local Active Directory. Under the forest selector, choose your directory and then click "Add." In my case, I select mydomain.com and click "Add Directory" to include the local Active Directory.
 
-A pop-up window will prompt you to either create a new account or use an existing account. This account will be used for directory synchronization.
+A pop-up window will prompt me to either create a new account or use an existing account. This account will be used for directory synchronization
 
 [![Screenshot-2024-07-10-145223.png](https://i.postimg.cc/jSQJm4dn/Screenshot-2024-07-10-145223.png)](https://postimg.cc/w1MvsJN9)
 
-I added the administrator which i creates to the enterprise account as showned below
+I added the previously created administrator as an admin to the enterprise account, as shown below
 
 [![Screenshot-2024-07-10-145614.png](https://i.postimg.cc/DwdC2Nc2/Screenshot-2024-07-10-145614.png)](https://postimg.cc/NKF8DpVV)
 
@@ -105,56 +110,28 @@ After clicking ok click ok the wizard will create a synchronization account with
 
 [![Screenshot-2024-07-10-150004.png](https://i.postimg.cc/vTZyz9Hn/Screenshot-2024-07-10-150004.png)](https://postimg.cc/sQqbfMWf)
 
-Click "Next" to proceed.
+Click "Next" to proceed. I noticed the following warning due to the UPN suffix "mydomain.com" not being routable and therefore unable to be verified in the tenant. To continue, select "Continue without matching all UPN suffixes to verify domains" by checking this checkbox
 
-I noticed the following warning due to the UPN suffix "mydomain.com" not being routable and therefore unable to be verified in the tenant. To continue, select "Continue without matching all UPN suffixes to verify domains" by checking this checkbox.
-
-Once selected, click "Next."
-
-Any UPN containing a non-routable domain, such as "mydomain," will synchronize with the "on.microsoft.com" domain name.
-
-Please note that I do not have a verified domain in my Azure Active Directory tenant
+Once selected, click "Next." Any UPN containing a non-routable domain, such as "mydomain," will synchronize with the "on.microsoft.com" domain name. Please note that I do not have a verified domain in my Azure Active Directory tenant
 
 [![Screenshot-2024-07-10-150624.png](https://i.postimg.cc/9f0NJpGC/Screenshot-2024-07-10-150624.png)](https://postimg.cc/SX0rKcTv)
 
-Click "Next" to continue.
-
-On the "Domain and OU Filtering" screen, we have the option to sync the entire Active Directory data by leaving everything as default. Alternatively, we can filter this data by selecting specific domains and OUs.
-
-In our example, we will only synchronize the "Admin" and "Users" OU. Choose the "Sync selected domains and OUs" option.
-
-Clear the checkbox in front of "mydomain.com", expand it, and then select the OUs you wish to sync. For example, I will only select "Admin" and "Users".
+Click "Next" to continue. On the "Domain and OU Filtering" screen, I have the option to sync the entire Active Directory data by leaving everything as default. Alternatively, I can filter this data by selecting specific domains and OUs. In this case I will only synchronize the "Admin" and "Users" OU. Choose the "Sync selected domains and OUs" option. Clear the checkbox in front of "mydomain.com", expand it, and then select the OUs you wish to sync. For example, I will only select "Admin" and "Users"
 
 [![Screenshot-2024-07-10-151219.png](https://i.postimg.cc/Qxq4DPmj/Screenshot-2024-07-10-151219.png)](https://postimg.cc/qzzXX1WF)
 
-Click "Next."
-
-For this step, I recommend sticking with the default settings for basic setup. For more complex configurations, you might consider other options where you need to match users using specific attributes across all directories.
-
-Here, we will proceed with the default selection.
+Click "Next." For this step, I recommend sticking with the default settings for basic setup. For more complex configurations, you might consider other options where you need to match users using specific attributes across all directories. Here, I will proceed with the default selection
 
 [![Screenshot-2024-07-10-151349.png](https://i.postimg.cc/nL9GXw4j/Screenshot-2024-07-10-151349.png)](https://postimg.cc/cKZnjh50)
 
 
-Click "Next."
+Click "Next." On the "Filter Users and Devices" tab, I have the option to sync all users and devices or specify a specific group. I will proceed with the default setting to sync all users and devices.
 
-On the "Filter Users and Devices" tab, we have the option to sync all users and devices or specify a specific group. We will proceed with the default setting to sync all users and devices.
-
-Click "Next."
-
-On the "Optional Features" tab, choose any additional features you would like to activate.
-
-Each feature has an information icon for more details. Note that the first two options are grayed out since we do not have Exchange in our forest.
-
-You can also enable "Password Writeback" and then enable "Self-Service Password Reset" in your Azure Active Directory.
+Click "Next." On the "Optional Features" tab, choose any additional features you would like to activate. Each feature has an information icon for more details. Note that the first two options are grayed out since I do not have Exchange in our forest. You can also enable "Password Writeback" and then enable "Self-Service Password Reset" in your Azure Active Directory.
 
 [![Screenshot-2024-07-10-152633.png](https://i.postimg.cc/LXH5cJ89/Screenshot-2024-07-10-152633.png)](https://postimg.cc/PLRdZrD9)
 
-Click "Next."
-
-Ensure that you have selected the checkbox to start the synchronization process when the configuration completes. Then, click "Install."
-
-The installation process will take some time to complete the setup of Microsoft Azure Active Directory Connect on our Windows Server 2019 domain controller.
+Click "Next." Ensure that you have selected the checkbox to start the synchronization process when the configuration completes. Then, click "Install." The installation process will take some time to complete the setup of Microsoft Azure Active Directory Connect on THE Windows Server 2019 domain controller
 
 [![Screenshot-2024-07-10-152849.png](https://i.postimg.cc/X7Nhr4pr/Screenshot-2024-07-10-152849.png)](https://postimg.cc/YjV8VcN7)
 
@@ -162,7 +139,7 @@ The Azure AD Connect configuration has been completed, and the synchronization p
 
 [![Screenshot-2024-07-10-153513.png](https://i.postimg.cc/x8ZKjvXy/Screenshot-2024-07-10-153513.png)](https://postimg.cc/dZ874TmL)
 
-I logged into the Azure account, and under "Azure AD Connect," we can now see that it is enabled. The last synchronization occurred less than one hour ago this indicates the 1000 users as been sync in less than an hour
+I logged into the Azure account, and under "Azure AD Connect," I can now see that it is enabled. The last synchronization occurred less than one hour ago this indicates the 1001 users as been sync in less than an hour
 
 
 [![Screenshot-2024-07-10-154248.png](https://i.postimg.cc/d00rCNGm/Screenshot-2024-07-10-154248.png)](https://postimg.cc/Mnhn2DPv)
@@ -171,7 +148,7 @@ Under the global admin portal one can see the 1000 users been sync
 
 [![Screenshot-2024-07-10-154439.png](https://i.postimg.cc/SQ15YH8V/Screenshot-2024-07-10-154439.png)](https://postimg.cc/yW9nwQLS)
 
-I decides to click on users and can see the users from our Admin and Users oganisation unit (OU) under on premise sync enabled column I can see yes for our user with their names this means it was really integrated from the on premises environment.
+I decides to click on users and can see the users from our Admin and Users oganisation unit (OU) under on premise sync enabled column I can see yes for our user with their names this means it was really integrated from the on premises environment
 
 [![Screenshot-2024-07-10-154605.png](https://i.postimg.cc/NM43nMKw/Screenshot-2024-07-10-154605.png)](https://postimg.cc/qhNDhpcm)
 
@@ -193,29 +170,36 @@ Let's perform a final verification on the Microsoft 365 Admin Center to ensure i
 
 [![Screenshot-2024-07-10-160530.png](https://i.postimg.cc/WzfgXGjq/Screenshot-2024-07-10-160530.png)](https://postimg.cc/wRL1Bs19)
 
-The account and an active directory Services account are well configureed and integrated so now let's test few things what we have
-done so far and does it really work so what I want you to do is to go to the DC domain and create a new user to see if it will sync to Azure and microsoft admin centre
+The account and Active Directory Services are well configured and integrated. Now, let's test what I have done so far to ensure it works correctly. I'll go to the DC domain and create a new user to see if it will sync to Azure and the Microsoft Admin Center
 
 [![Screenshot-2024-07-11-175554.png](https://i.postimg.cc/X75L3qV9/Screenshot-2024-07-11-175554.png)](https://postimg.cc/TpRgJR5P)
 
 [![Screenshot-2024-07-11-175847.png](https://i.postimg.cc/0ydCM4KQ/Screenshot-2024-07-11-175847.png)](https://postimg.cc/NKFXZp4q)
 
-Right now the user aaada might start showing up after 30 minutes inside the cloud from the Ad connect what this sync is doing after 30 minutes it's going to go out and see any changes in AC directory and it's going to move them to our cloud and so once you log into your microsoft admin centre portal office.com and you click on admin you see that as the ad last sync was done here 6 minutes ago so everything looks good and this shows your synchronization status in the company
+Right now, the user "aaada" might start appearing in the cloud after 30 minutes through AD Connect. During this synchronization period, AD Connect checks for any changes in the Active Directory and transfers them to the cloud. Once you log into your Microsoft Admin Center portal and click on "Admin," you'll see that the last AD sync was completed 6 minutes ago. This indicates that everything is working correctly, and it shows the synchronization status within the company
 
 [![Screenshot-2024-07-11-180240.png](https://i.postimg.cc/Wb0GCynn/Screenshot-2024-07-11-180240.png)](https://postimg.cc/0b2KJchM)
 
-but if you go to active users we don't see the new user called aaada because it takes about 30 minutes for Ad connect to sync to cloud
+But if you navigate to "Active Users," you won't see the new user called "aaada" immediately because it takes approximately 30 minutes for AD Connect to sync the user to the cloud
 
 [![Screenshot-2024-07-11-180409.png](https://i.postimg.cc/tTHySYCD/Screenshot-2024-07-11-180409.png)](https://postimg.cc/kVwkDMSt)
 
-To make this process faster I use Powershell to configure the process and import the sync module from the microsoft coummunity. the link will be display on here
+To expedite the sync process, I use PowerShell to configure it and import the sync module from the Microsoft community. The link will be displayed here
 
 [![Screenshot-2024-07-11-181119.png](https://i.postimg.cc/RhkTK5T3/Screenshot-2024-07-11-181119.png)](https://postimg.cc/vxv9wKkM)
 
-now few seconds you can verify that the new user called aaada has been snychronise in both azure and microsoft admin center
+Now, within a few seconds, you can verify that the new user called "aaada" has been synchronized in both Azure and the Microsoft Admin Center
 
 [![Screenshot-2024-07-11-181658.png](https://i.postimg.cc/mgGvW0G2/Screenshot-2024-07-11-181658.png)](https://postimg.cc/TpC7rNwZ)
 
-In Azure Portal
+Same in Azure Portal
 
 [![Screenshot-2024-07-11-181755.png](https://i.postimg.cc/HLYFVXxq/Screenshot-2024-07-11-181755.png)](https://postimg.cc/75RKRCS9)
+
+One more tip incase your Password Hash Synchronization is skipped or not connected with Microsoft Entra ID. As a result passwords will not be synchronized with Microsoft Entra ID.
+
+Recommended action
+Restart Microsoft Entra Sync Services:
+Please note that any synchronization operations that are currently running will be interrupted. You can choose to perform below steps when no synchronization operation is in progress.
+1. Click Start, click Run, type Services.msc, and then click OK.
+2. Locate Microsoft Entra Sync, right-click it, and then click Restart.
