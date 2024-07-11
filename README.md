@@ -19,6 +19,7 @@ While these tasks are typically handled by systems administrators at the hiring 
   + [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
   + [Windows 10 ISO](https://www.microsoft.com/de-de/evalcenter/download-windows-10-enterprise/)
   + [Windows Sever 2019](https://www.microsoft.com/en-us/evalcenter/evaluate-windows-server-2019)
+  + [Powershell script](https://techcommunity.microsoft.com/t5/itops-talk-blog/powershell-basics-how-to-force-azuread-connect-to-sync/ba-p/887043)
 ## Program walk-through
 
 As mentioned earlier, I will be using the Active Directory domain named DC, which contains 1000 users and will be synced to the Azure cloud. This AD has already been installed, and the server has been promoted, as shown below. The domain name associated with the on-premises AD is mydomain.com, which will be used to identify users during synchronization with Azure. Please note that this is not a verified domain; it is only being used for testing purposes. In a real company, a verified domain, typically one designated for company activities, would be used
